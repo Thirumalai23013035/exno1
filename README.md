@@ -21,41 +21,128 @@ STEP 5: Remove outliers using IQR
 STEP 6: Use zscore of to remove outliers
 
 # Coding and Output
-``
-            import pandas as pd
-            df=pd.read_csv("SAMPLEIDS.csv")
-            df
+~~~
+import pandas as pd
+df=pd.read_csv("/content/SAMPLEIDS.csv")
+df
+~~~
+![Screenshot 2024-08-17 133731](https://github.com/user-attachments/assets/b1cbacc0-0f7a-43ef-9e85-ef72797ee042)
+```
+df.head(6)
+```
+![Screenshot 2024-08-17 134240](https://github.com/user-attachments/assets/4d527b58-809c-4bb9-9564-1bc90ab36a7f)
+~~~
+df.tail(6)
+~~~
+![tail](https://github.com/user-attachments/assets/a42a919b-9ad9-4bb5-9cc9-f50b54cc3526)
+~~~
+df.isnull()
+~~~
+![null](https://github.com/user-attachments/assets/4651e847-13ff-454a-ad14-6cfd71d9b985)
+~~~
+df.notnull()
+~~~
+![Screenshot 2024-08-17 134448](https://github.com/user-attachments/assets/236a7d9f-3551-4f6d-9176-b7f1128d4038)
 
- ![Screenshot 2024-08-17 140037](https://github.com/user-attachments/assets/1c97e622-fa5f-4fd6-9ada-9919f632d492)
+~~~
+df.dropna(axis=0)
+~~~
+![Screenshot 2024-08-17 134455](https://github.com/user-attachments/assets/86a150fb-a742-4580-b1f5-43782f062184)
+~~~
+df.fillna(0)
+~~~
+![Screenshot 2024-08-17 134510](https://github.com/user-attachments/assets/03b83136-dea5-4824-abe2-a2ea66c164ff)
+~~~
+print(df.shape)
+~~~
+![Screenshot 2024-08-17 134518](https://github.com/user-attachments/assets/8fd5d9d6-06f8-4dc3-8089-076c47b8d20d)
+~~~
+df.describe()
+~~~
+![Screenshot 2024-08-17 134600](https://github.com/user-attachments/assets/832427ba-9a92-4105-a180-1b3f8d531915)
+# IQR:
+~~~
+import pandas as pd
+ir=pd.read_csv("/content/iris.csv")
+ir
+~~~
+![Screenshot 2024-08-17 134610](https://github.com/user-attachments/assets/e63f896a-8f97-4b28-875c-27ad7b3b19f9)
+~~~
+ir.describe()
+~~~
+![Screenshot 2024-08-17 134619](https://github.com/user-attachments/assets/8ef8ed5a-dfa6-4087-a5dc-d3bc2eec0302)
+~~~
+import seaborn as sns
+sns.boxplot(x='sepal_width',data=ir)
+~~~
+![Screenshot 2024-08-17 134627](https://github.com/user-attachments/assets/ee55a266-e105-4417-984b-6f31fb6d93c7)
+~~~
+c1=ir.sepal_width.quantile(0.25)
+c3=ir.sepal_width.quantile(0.75)
+iq=c3-c1
+print(c3)
+~~~
+![Screenshot 2024-08-17 134638](https://github.com/user-attachments/assets/417615b6-b710-48dd-bc0a-4fd444ed16ba)
+~~~
+rid=ir[((ir.sepal_width<(c1-1.5*iq))|(ir.sepal_width>(c3+1.5*iq)))]
+rid['sepal_width']
+~~~
+![Screenshot 2024-08-17 134645](https://github.com/user-attachments/assets/425cef6d-cd8e-45a5-b21b-c0ad113a8002)
+~~~
+delid=ir[~((ir.sepal_width<(c1-1.5*iq))|(ir.sepal_width>(c3+1.5*iq)))]
+delid
+~~~
+![Screenshot 2024-08-17 134653](https://github.com/user-attachments/assets/11c04a31-a571-4b06-acca-20d4d48ca429)
+~~~
+sns.boxplot(x='sepal_width',data=delid)
+~~~
+![Screenshot 2024-08-17 134659](https://github.com/user-attachments/assets/2fc13aea-8934-45ac-bb3a-bd8f209bd7f4)
+# Z-SCORE
+~~~
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import scipy.stats as stats
 
-``
-           df.tail()
-           ![Screenshot 2024-08-17 140715](https://github.com/user-attachments/assets/2d335de9-0801-4c5c-8359-69331784b584)
+dataset=pd.read_csv('/content/heights.csv')
+dataset
+~~~
+![Screenshot 2024-08-17 134706](https://github.com/user-attachments/assets/b244041b-da3b-4fce-91a7-3b3179b3a2f0)
+~~~
+df=pd.read_csv('/content/heights.csv')
+q1=df['height'].quantile(0.25)
+q2=df['height'].quantile(0.5)
+q3=df['height'].quantile(0.75)
 
-           df.head()
-           ![Screenshot 2024-08-17 140736](https://github.com/user-attachments/assets/8a38385b-88ac-48eb-bcd6-edd1729d1c96)
-
-           df.isnull()
-           ![Screenshot 2024-08-17 140751](https://github.com/user-attachments/assets/bcb4ca12-b4df-466c-a416-ba68a340de74)
-
-           df.not null
-           ![Screenshot 2024-08-17 140802](https://github.com/user-attachments/assets/9c6e7257-670c-406b-87c9-aecc8f4326f9)
-
-           df.dropna(axis=0)
-           ![Screenshot 2024-08-17 140818](https://github.com/user-attachments/assets/868c8914-2d99-437c-a955-7a5ab4998e2e)
-
-           df.dropna(axis=1)
-           ![Screenshot 2024-08-17 140832](https://github.com/user-attachments/assets/94e63d0c-e1a3-49e3-9105-eaa4c1a0689e)
-
-           df.fillna(0)
-           ![Screenshot 2024-08-17 140853](https://github.com/user-attachments/assets/34d7990a-3210-49c6-86ad-996158789029)
-
-           
-           printf(df.shape)
-           ![Screenshot 2024-08-17 140916](https://github.com/user-attachments/assets/d7b1730f-3bc0-40fd-9093-399211e72cbb)
-
-           df.describe()
-           ![Screenshot 2024-08-17 140927](https://github.com/user-attachments/assets/6fbbbec5-59e7-4f44-9a73-d9ca7194afef)
+iqr=q3-q1
+iqr
+~~~
+![Screenshot 2024-08-17 134712](https://github.com/user-attachments/assets/d54639ac-fcda-4ac9-a987-5d4e69d1a228)
+~~~
+low=q1-1.4*iqr
+low
+~~~
+![Screenshot 2024-08-17 134717](https://github.com/user-attachments/assets/bf609cba-fcbd-498f-a9c1-1654c92a2926)
+~~~
+high=q3+1.5*iqr
+high
+~~~
+![Screenshot 2024-08-17 134724](https://github.com/user-attachments/assets/2a8e87c6-fa56-496b-ad49-e79e34ed4898)
+~~~
+df1 = df[((df['height'] >=low)& (df['height'] <=high))]
+df1
+~~~
+![Screenshot 2024-08-17 134729](https://github.com/user-attachments/assets/1b5addd2-825c-487f-be73-d674e843c8cc)
+~~~
+z=np.abs(stats.zscore(df['height']))
+z
+~~~
+![Screenshot 2024-08-17 134737](https://github.com/user-attachments/assets/2381afe9-604c-4c42-861e-2a70f7d15321)
+~~~
+df1=df[z<3]
+df
+~~~
+![Screenshot 2024-08-17 134745](https://github.com/user-attachments/assets/ff944025-0b51-4b58-863d-caa02148c45c)
 
 # Result
-          <<include your Result here>>
+ Thus we have cleaned the data and removed the outliers by detection using IQR and Z-score method.       
